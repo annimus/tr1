@@ -12,7 +12,7 @@ int main() {
 	int taxa;
 
 	numPKTs = tamArq/TAM_PKT;
-	
+	//
 
 	return 0;
 }
