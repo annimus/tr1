@@ -3,7 +3,7 @@
 
 class Receiver {
 	private:
-		enum ReceiverState{};
+		enum ReceiverState{SEND, RECEIVE};
 
 	public:
 };
