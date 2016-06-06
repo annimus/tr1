@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define TAM_PKT 8192;
+#define TAM_PKT 8000;
 #define false 0;
 #define true 1;
 
@@ -16,21 +16,19 @@ _Bool receiverReceive(int pkt);
 _Bool senderSend();
 _Bool senderReceive(int ack);
 _Bool senderTimeoutResend(int pkt);
-void limparVariaveis();
 
 int main() {
 
-	/*int pkt;
-	int ack; */
 	int option;
 	int d, x;
-	int distancia = 5000;
-	int tamArq = 8000000;
+	double distancia = 5000;/*Distancia em metros (5 Km)*/
+	double tamArq = 8000000;/*Tamanho do arquivo em bits (1 MB)*/
 	int numPKTs;
-	int taxa = 10000000;
+	double taxa = 10000000;/*Taxa de transmissão em bits/s (10 Mb)*/
 	int i = 0;
 	int numPktLost = 0;
 	_Bool pktLost;
+	double tempototal = 0;
 	srand(time(NULL));
 
 	numPKTs = tamArq / TAM_PKT;
@@ -46,7 +44,7 @@ int main() {
 		printf("Digite sua opcao :\n");
 		scanf("%d",&option);
 
-	
+
 		switch(option){
 			case 1:
 				while (i < numPKTs) {
@@ -59,13 +57,15 @@ int main() {
 
 				}
 
-				printf("\n\nTempo total decorrido: %d unidades de tempo\n",TIMEunit);
+				tempototal = TIMEunit*((tamArq/taxa)+(distancia/300000000));
+
+				printf("\n\nTempo total decorrido: %f segundos\n",tempototal);
 				printf("Numero de pacotes perdidos: %d\n", numPktLost);
 				getchar();
 				getchar();
 				break;
 
-			case 2: 
+			case 2:
 				printf("Digite o tamanho do arquivo a ser enviado (bits).\n");
 				scanf("%d",&x);
 				printf("Digite a distancia desejada (metros).\n");
@@ -85,14 +85,16 @@ int main() {
 
 				}
 
-				printf("\n\nTempo total decorrido: %d unidades de tempo\n",TIMEunit);
+				tempototal = TIMEunit*((tamArq/taxa)+(distancia/300000000));
+
+				printf("\n\nTempo total decorrido: %f segundos\n",tempototal);
 				printf("Numero de pacotes perdidos: %d\n", numPktLost);
 				getchar();
 				getchar();
 
 				break;
 		}
-		
+
 		SenderState = 0;
 		ReceiverState = 0;
 		TIMEunit = 0;
@@ -102,16 +104,12 @@ int main() {
 		i = 0;
 		d = 0;
 		x = 0;
-		
+
 		system ("clear");
 	}while (option != 3);
 
 
 	return 0;
-}
-
-void limparVariaveis() {
-	
 }
 
 /*Receiver functions*/
