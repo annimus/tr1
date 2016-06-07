@@ -23,10 +23,10 @@ int main() {
 	int d, x;
 	double distancia = 5000;/*Distancia em metros (5 Km)*/
 	double tamArq = 8000000;/*Tamanho do arquivo em bits (1 MB)*/
-	int numPKTs;
 	double taxa = 10000000;/*Taxa de transmissão em bits/s (10 Mb)*/
-	int i = 0;
-	int numPktLost = 0;
+	unsigned int numPKTs;
+	unsigned int i = 0;
+	unsigned int numPktLost = 0;
 	_Bool pktLost;
 	double tempototal = 0;
 	srand(time(NULL));
@@ -41,8 +41,9 @@ int main() {
 		printf("2 - Escolher Parametros.\n");
 		printf("3 - Sair.\n");
 		printf("\n");
-		printf("Digite sua opcao :\n");
+		printf("Digite sua opcao : ");
 		scanf("%d",&option);
+		getchar();
 
 
 		switch(option){
@@ -51,8 +52,9 @@ int main() {
 
 					pktLost = senderSend();
 					if (!pktLost) {
-						numPktLost++;
 						i++;
+					}else{
+						numPktLost++;
 					}
 
 				}
@@ -60,16 +62,18 @@ int main() {
 				tempototal = TIMEunit*((tamArq/taxa)+(distancia/300000000));
 
 				printf("\n\nTempo total decorrido: %f segundos\n",tempototal);
-				printf("Numero de pacotes perdidos: %d\n", numPktLost);
-				getchar();
+				printf("Numero de pacotes: %d\n",numPKTs);
+				printf("Numero de retransmissao de pacote: %d\n", numPktLost);
 				getchar();
 				break;
 
 			case 2:
-				printf("Digite o tamanho do arquivo a ser enviado (bits).\n");
+				printf("Digite o tamanho do arquivo a ser enviado (bits): ");
 				scanf("%d",&x);
-				printf("Digite a distancia desejada (metros).\n");
+				getchar();
+				printf("Digite a distancia desejada (metros): ");
 				scanf("%d",&d);
+				getchar();
 
 				distancia = d;
 				tamArq = x;
@@ -79,8 +83,9 @@ int main() {
 
 					pktLost = senderSend();
 					if (!pktLost) {
-						numPktLost++;
 						i++;
+					}else{
+						numPktLost++;
 					}
 
 				}
@@ -88,8 +93,8 @@ int main() {
 				tempototal = TIMEunit*((tamArq/taxa)+(distancia/300000000));
 
 				printf("\n\nTempo total decorrido: %f segundos\n",tempototal);
-				printf("Numero de pacotes perdidos: %d\n", numPktLost);
-				getchar();
+				printf("Numero de pacotes: %d\n",numPKTs);
+				printf("Numero de retransmissao de pacote: %d\n", numPktLost);
 				getchar();
 
 				break;
@@ -114,8 +119,8 @@ int main() {
 
 /*Receiver functions*/
 _Bool receiverSend(int ack) {
-	int lose = 1+(rand()%10);
-	if(lose < 9){
+	int lose = 1+(rand()%20);
+	if(lose < 20){
 		return senderReceive(ack);
 	}else{
 		timeout++;
@@ -141,6 +146,7 @@ _Bool receiverReceive(int pkt) {
 				printf("Enviado ack 0\n");
 				return receiverSend(0);
 			} else {
+				printf("Pacote duplicado\n");
 				printf("Enviado ack 1\n");
 				return receiverSend(1);
 			}
@@ -150,6 +156,7 @@ _Bool receiverReceive(int pkt) {
 				printf("Enviado ack 1\n");
 				return receiverSend(1);
 			} else {
+				printf("Pacote duplicado\n");
 				printf("Enviado ack 0\n");
 				return receiverSend(0);
 			}
@@ -162,8 +169,8 @@ _Bool receiverReceive(int pkt) {
 
 /*Sender functions*/
 _Bool senderSend() {
-	int lose = 1 + (rand()%10);
-	if(lose < 9){
+	int lose = 1 + (rand()%20);
+	if(lose < 20){
 		switch (SenderState) {
 		case 0:
 			timeout = 0;
